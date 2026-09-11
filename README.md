@@ -1,4 +1,4 @@
-# Sunhaven Context-Aware Access and Shared-Device Session Security
+# Sunhaven CAPE and SSSA Security
 
 This repository contains my individual technical contribution to the
 Sunhaven Care Workforce IAM project.
