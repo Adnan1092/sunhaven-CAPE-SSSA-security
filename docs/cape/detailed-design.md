@@ -54,3 +54,13 @@ CAPE will not replace RBAC, perform MFA, check Microsoft Intune directly or dete
 
 The completed implementation will be tested using controlled access-request scenarios.
 
+## Evaluation and Limitations
+
+CAPE successfully checks the given context and returns ALLOW, BLOCK or REQUIRE_REAUTHENTICATION. The automated tests confirmed that all four CAPE policies and the decision priority work correctly.
+
+CAPE uses supplied values for resource sensitivity, device status and network location. It does not collect real device or location information.
+
+CAPE works as an extra security check after RBAC. It does not perform MFA or re-authentication itself.
+
+This is a working prototype and is not directly connected to Microsoft Entra Conditional Access.
+
