@@ -1,33 +1,56 @@
 # CAPE Detailed Component Design
 
-## Purpose
+## 1. Purpose
 
-This design shows how CAPE processes an access request before returning a contextual security decision.
+This design shows how the Context-Aware Access Policy Engine (CAPE) processes an access request and returns a contextual security decision.
 
-The detailed component diagram is available in:
+CAPE works as an additional security check after normal Role-Based Access Control (RBAC) authorisation has passed.
 
-`diagrams/cape/cape-detailed-component-design.png`
+## 2. Detailed Component Diagram
 
-## Processing Flow
+![Sunhaven CAPE Detailed Component Design](../../diagrams/cape/cape-detailed-component-design.png)
 
-CAPE assumes that normal RBAC authorisation has already passed.
+The editable version of the diagram is also available in:
 
-The component then:
+`diagrams/cape/cape-detailed-component-design.drawio`
+
+## 3. Processing Flow
+
+CAPE follows these steps:
 
 1. Receives `resource_sensitivity`, `device_status` and `network_location`.
-2. Validates the supplied inputs.
-3. Applies CAPE-P01 if required information is missing or invalid.
-4. Evaluates CAPE-P02, CAPE-P03 and CAPE-P04 for valid requests.
-5. Applies the decision priority:
+2. Checks that the required inputs are present and valid.
+3. If an input is missing or invalid, CAPE-P01 returns `BLOCK`.
+4. If the inputs are valid, the Policy Engine checks CAPE-P02, CAPE-P03 and CAPE-P04.
+5. If more than one policy applies, CAPE uses the decision priority:
+
    `BLOCK > REQUIRE_REAUTHENTICATION > ALLOW`
-6. Returns the final `decision`, `matched_policy` and `reason`.
 
-## Implementation
+6. CAPE returns:
+   - `decision`
+   - `matched_policy`
+   - `reason`
 
-The design will be implemented using simple Python.
+## 4. Policy Decisions
 
-Input validation and policy checking will use basic functions and conditions. The implementation will follow the security policies defined in:
+The component uses four security policies:
+
+- **CAPE-P01:** Missing or invalid required context → `BLOCK`
+- **CAPE-P02:** Sensitive resource from an untrusted device → `BLOCK`
+- **CAPE-P03:** Sensitive resource from an external network → `REQUIRE_REAUTHENTICATION`
+- **CAPE-P04:** No additional contextual restriction → `ALLOW`
+
+The full policy definitions are available in:
 
 `policies/cape/security-policies.md`
 
-The implementation will then be tested using controlled access-request scenarios.
+## 5. Implementation
+
+The design will be implemented using simple Python code.
+
+The implementation will use basic functions and conditions for input validation and policy checking.
+
+CAPE will not replace RBAC, perform MFA, check Microsoft Intune directly or detect the real location of a user.
+
+The completed implementation will be tested using controlled access-request scenarios.
+
